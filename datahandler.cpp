@@ -1,5 +1,11 @@
 #include "datahandler.hpp"
 
+DataHandler::DataHandler()
+{
+	this->maxBad = 0;
+	this->minBad = 999;
+	this->totalBad = 0;
+}
 DataHandler::DataHandler(string filename)
 {
 	this->filename = filename;
@@ -11,6 +17,7 @@ void DataHandler::StartMonte()
 {
 	MonteCarlo m(numBatches, numSampled);
 	m.DetectBad();
+	totalBadDetected = m.GetTotalBadDetected();
 }
 void DataHandler::GetDataSets()
 {
@@ -44,7 +51,7 @@ void DataHandler::GetDataSets()
 		{
 			for(int j = 0; j < numItems; ++j)
 			{
-				outFS << "g" << endl;
+				outFS << 'g' << endl;
 			}
 		}
 		outFS.close();
@@ -60,10 +67,10 @@ void DataHandler::GetBadItems()
 		if(randNum < pctBadItem)
 		{
 			numBad += 1;
-			outFS << "b" << endl;
+			outFS << 'b' << endl;
 		}
 		else
-			outFS << "g" << endl;
+			outFS << 'g' << endl;
 	}
 
 	maxBad = max(maxBad, numBad);
@@ -106,17 +113,18 @@ void DataHandler::PrintParams()
 void DataHandler::PrintData()
 {
 	float avgBad = (float)totalBad / (float)totalBadSets;
-	cout << "Total bad sets = " << totalBadSets << endl; 
-	cout << "Max number of bad items in a bad set = " << maxBad << endl;
-	cout << "Min number of bad items in a bad set = " << minBad << endl;
-	cout << "Average number of bad items in a bad set = " << avgBad << endl;
+	cout << "  Total bad sets = " << totalBadSets << endl; 
+	cout << "  Max number of bad items in a bad set = " << maxBad << endl;
+	cout << "  Min number of bad items in a bad set = " << minBad << endl;
+	cout << "  Average number of bad items in a bad set = " << avgBad << endl;
 }
-/*int DataHandler::GetNumBatches()
+void DataHandler::PrintResults()
 {
-	return this->numBatches;
+	float pctDetected = ((float)totalBadDetected / (float)totalBadSets) * 100;
+	float base = 1 - (pctBadItem / 100.0);
+	cout << "  Total bad sets found = " << totalBadDetected << endl;
+	cout << "  Percentage of bad batches actually detected = " << pctDetected << "%" << endl;
+	cout << "  Base = " << base << "  Exponent = " << numSampled << endl;
+	cout << "  Predicted P(failure to detect bad batch) = " << pow(base, numSampled) << endl;
 }
-int DataHandler::GetNumSampled()
-{
-	return this->numSampled;
-}*/
 

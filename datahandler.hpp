@@ -4,9 +4,8 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
-#include <iterator>
+#include <math.h>
 #include <vector>
-#include <time.h>
 #include <algorithm>
 #include "montecarlo.hpp"
 using namespace std;
@@ -19,9 +18,10 @@ private:
 	string filename;
 	int numBatches, numItems, pctBadBatch, pctBadItem, numSampled;
 	int totalBadSets, maxBadItems, minBadItems, avgBadItems;
-	int maxBad, minBad, totalBad;
+	int maxBad, minBad, totalBad, totalBadDetected;
 
 public:
+	DataHandler();
 	DataHandler(string filename);
 	void GetParams();
 	void PrintParams();
@@ -29,9 +29,7 @@ public:
 	void GetBadItems();
 	void PrintData();
 	void StartMonte();
-	//int GetNumBatches();
-	//int GetNumSampled();
-
+	void PrintResults();
 };
 
 #endif

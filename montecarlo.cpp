@@ -1,9 +1,18 @@
 #include "montecarlo.hpp"
 
+MonteCarlo::MonteCarlo()
+{
+	this->numBatches = 0;
+	this->numSampled = 0;
+	this->totalBadDetected = 0;
+	this->prefix = "datasets/ds";
+	this->suffix = ".txt";
+}
 MonteCarlo::MonteCarlo(int numBatches, int numSampled)
 {
 	this->numBatches = numBatches;
 	this->numSampled = numSampled;
+	this->totalBadDetected = 0;
 	this->prefix = "datasets/ds";
 	this->suffix = ".txt";
 }
@@ -22,14 +31,20 @@ void MonteCarlo::DetectBad()
 				getline(inFS, line);
 				if(line.compare("b") == 0)
 				{
-					cout << "Bad APPLE DETECTED!! Batch: " << i+1 << " Item: " << j << endl;
+					totalBadDetected += 1;
+					break;
 				}
 			}
 		}
 		else
 		{
 			cout << "ERROR: Could not open file!!!" << endl;
+			break;
 		}
 		inFS.close();
 	}
+}
+int MonteCarlo::GetTotalBadDetected()
+{
+	return this->totalBadDetected;
 }
